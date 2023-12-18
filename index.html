@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <div id="poke_con">
+
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            $.ajax({
+                type: "get",
+                url: "https://pokeapi.co/api/v2/pokemon/",
+                pending: function (res) {
+                    $("#poke_con").append(`<div> Loading </div>`)
+                },
+                success: function (res) {
+                    const pokemons = res.results
+                    pokemons.forEach(poke => {
+                        $.ajax({
+                            type: "get",
+                            url: poke.url,
+                            success: function (response) {
+                                console.log(response["sprites"]["other"]["official-artwork"]["front_default"], response["forms"][0]["name"])
+                                $("#poke_con").append(`<div> 
+                                    <img src="${response["sprites"]["other"]["official-artwork"]["front_default"]}" alt="${response["forms"][0]["name"]}" />  
+                                    
+                                    <a>${response["forms"][0]["name"]}</a>
+                                    </div>`)
+                            }
+                        });
+                    });
+                },
+            });
+        });
+    </script>
+</body>
+
+</html>
