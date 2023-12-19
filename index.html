@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
     <title>Document</title>
 </head>
 
@@ -11,38 +12,58 @@
 
     <div id="poke_con">
 
+
+        <div class="poke_card">
+
+            <div>
+                <div>
+                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png"
+                        alt="">
+                </div>
+                <div>
+                    <p>Bulbasaur</p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div id="pagination">
+        <div>
+            <a href="javascript:void(0)">Prev</a>
+        </div>
+
+        <div>
+            <p>0</p>
+        </div>
+
+        <div>
+            <a href="javascript:void(0)" id="next">Next</a>
+        </div>
     </div>
 
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="./renderPokemon.js"></script>
 
     <script>
         $(document).ready(function () {
+            let currOffset = 20
+            renderPokemons("https://pokeapi.co/api/v2/pokemon/")
 
-            $.ajax({
-                type: "get",
-                url: "https://pokeapi.co/api/v2/pokemon/",
-                pending: function (res) {
-                    $("#poke_con").append(`<div> Loading </div>`)
-                },
-                success: function (res) {
-                    const pokemons = res.results
-                    pokemons.forEach(poke => {
-                        $.ajax({
-                            type: "get",
-                            url: poke.url,
-                            success: function (response) {
-                                console.log(response["sprites"]["other"]["official-artwork"]["front_default"], response["forms"][0]["name"])
-                                $("#poke_con").append(`<div> 
-                                    <img src="${response["sprites"]["other"]["official-artwork"]["front_default"]}" alt="${response["forms"][0]["name"]}" />  
-                                    
-                                    <a>${response["forms"][0]["name"]}</a>
-                                    </div>`)
-                            }
-                        });
-                    });
-                },
-            });
+
+            $("#next").on("click", function () {
+                console.log("Hello")
+                renderPokemons(`https://pokeapi.co/api/v2/pokemon/?offset=${currOffset}&limit=20`)
+                currOffset += 20
+            })
+
+
+            function handlePrev() {
+                currOffset -= 20
+                renderPokemons(`https://pokeapi.co/api/v2/pokemon/?offset=${currOffset}&limit=20`)
+            }
         });
     </script>
 </body>
